@@ -2,10 +2,61 @@ from graph_io import *
 from graph import *
 import collections
 
-with open('colorref_smallexample_2_49.grl') as f:
-    L = load_graph(f, read_list = True)
+# Central program
+
+def RunIsomophismProgram(name):
+    with open(name) as f:
+        L = load_graph(f, read_list=True)
+
+    # Initial colouring
+    AList = CreateVertexList(L)
+    SetInitialColour(AList)
+    # preparation
+    thing = BuildDict(AList)
+    kaas = thing[0]
+    max = thing[1]
+    # Refining
+    changed = True
+    while changed:
+        stuff = Refine(kaas, max)
+        changed = stuff[0]
+        max = stuff[1]
+    # arrived at first stable colouring branching starts here:
+
+    # Cycling every possible comparison
+    GraphNumbers = len(L[0]) + 1
+    for x in range(1,GraphNumbers):
+        dict1 = BuildDict(L[0][x].vertices)
+        for y in range(x + 1,GraphNumbers):
+            # Prep
+            dict2 = BuildDict(L[0][y].vertices)
+            BranchingNeeded = False
+            # Comparing Graphs
+            if BasicChecks(dict1, dict2):
+                if isIsomorphism(dict1, dict2):
+                    print('graph ' + str(x) + ' and graph ' + str(y) + ' are isomorphic')
+                else:
+                    BranchingNeeded = True
+            else:
+                print('graph ' + str(x) + ' and graph ' + str(y) + ' are not isomorphic')
+            # Brancing
+            while BranchingNeeded:
+                BranchingNeeded = False
 
 
+
+
+
+
+    # writing to dot file
+    i = 0
+    for G in L[0]:
+        name = 'mygraph' + str(i) + '.dot'
+        with open(name, 'w') as f:
+            write_dot(G, f)
+        i += 1
+
+# Color Refinement
 
 def CreateVertexList(DataSet) -> list:
     VertexList = []
@@ -13,23 +64,21 @@ def CreateVertexList(DataSet) -> list:
         VertexList.extend(graph.vertices)
     return VertexList
 
-def SetInitialColour(List) -> int:
-    max = 0
+def SetInitialColour(List):
     for vertex in List:
-        number = vertex.degree
-        vertex.colornum = number
-        if number > max:
-            max = number
-    return max
+        vertex.colornum = vertex.degree
 
-def BuildDict(List) -> dict:
+def BuildDict(List) -> list:
     Dict = {}
+    max = 0
     for vertex in List:
         if Dict.__contains__(vertex.colornum):
             Dict.get(vertex.colornum).append(vertex)
         else:
             Dict[vertex.colornum] = [vertex]
-    return Dict
+            if vertex.colornum > max:
+                max = vertex.colornum
+    return [Dict, max]
 
 def Neighbourhoods(Node) -> list:
     colour = []
@@ -68,19 +117,26 @@ def Refine(Dict, max) -> list:
             node.colornum = max
     return [changed, max]
 
+# Branching Starts here
 
-AList = CreateVertexList(L)
-max = SetInitialColour(AList)
-kaas = BuildDict(AList)
-changed = True
-while changed:
-    stuff = Refine(kaas,max)
-    changed = stuff[0]
-    max = stuff[1]
+def BasicChecks(Dict1, Dict2) -> bool:
+    if len(Dict1) != len(Dict2):
+        return False
+    for key in Dict1.keys():
+        if len(Dict1.get(key)) != len(Dict2.get(key)):
+            return False
+    return True
 
-i = 0
-for G in L[0]:
-    name = 'mygraph' + str(i) + '.dot'
-    with open(name,'w') as f:
-        write_dot(G,f)
-    i += 1
+def isIsomorphism(Dict1, Dict2):
+    for key in Dict1:
+        if len(Dict1.get(key)) != 1 or len(Dict2.get(key)) != 1:
+            return key
+    return True
+
+def BranchingCheck(Dict1, Dict2, key) -> bool:
+    a = 10
+#     something happens
+
+
+name = 'colorref_smallexample_2_49.grl'
+RunIsomophismProgram(name)
