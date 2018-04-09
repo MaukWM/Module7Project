@@ -29,17 +29,19 @@ def RunIsomophismProgram(name,autos):
 
     a = len(dicts)
 
-    for x in range(0,a):
-        for y in range(x + 1,a):
-            something = [dicts[x],dicts[y]]
-            print("graph " + str(x) + " graph " + str(y) + " have " + str(CountIsomorphism(dicts[x],dicts[y],True)) + " isomorphism(s)")
-
     if autos:
         n = 0
         for graph in L[0]:
             findAutoMorphism(graph,n)
             n = n + 1
-"""
+
+    for x in range(0,a):
+        for y in range(x + 1,a):
+            something = [dicts[x],dicts[y]]
+            print("graph " + str(x) + " graph " + str(y) + " have " + str(CountIsomorphism(dicts[x],dicts[y],True)) + " isomorphism(s)")
+
+
+
 # writing to dot file
     i = 0
     for G in L[0]:
@@ -47,7 +49,7 @@ def RunIsomophismProgram(name,autos):
         with open(name, 'w') as f:
             write_dot(G, f)
         i += 1
-"""
+
 
 
 # Color Refinement
@@ -161,7 +163,6 @@ def RestoreColours(Dict1):
         for vertex in vertexlist:
             vertex.colornum = key
 
-
 def DeepcopyDict(Dict1) -> dict:
     A = {}
     for key in Dict1.keys():
@@ -226,7 +227,6 @@ def findStableColouring(dict1, dict2):
                     dict2[max2].append(vertex)
                     dict2.get(key).remove(vertex)
 
-
 def CountIsomorphism(dict1, dict2, first):
     if not first:
         findStableColouring(dict1, dict2)
@@ -255,9 +255,15 @@ def CountIsomorphism(dict1, dict2, first):
 
         dict1.get(key).remove(vertex1)
         dict2.get(key).remove(vertex2)
-        dict1[max+1] = [vertex1]
-        dict2[max+1] = [vertex2]
+        dict1[max + 1] = [vertex1]
+        dict2[max + 1] = [vertex2]
         num = num + CountIsomorphism(dict1, dict2, False)
+
+        DecisionProblem = False
+
+        if DecisionProblem:
+            if num > 0:
+                break
     return num
 
 def copyGraph(graph):
@@ -269,8 +275,9 @@ def copyGraph(graph):
         index = A.index(vertex)
         for vertex2 in vertex.neighbours:
             index2 = A.index(vertex2)
-            f = Edge(B[index],B[index2])
-            newGraph.add_edge(f)
+            if index2 > index:
+                f = Edge(B[index],B[index2])
+                newGraph.add_edge(f)
 
     return newGraph
 
@@ -300,6 +307,6 @@ def findAutoMorphism(Graph1, n):
     print("Graph " + str(n) + " has " + str(CountIsomorphism(dict1, dict2, True)) + " automorphisms")
 
 
-name = 'trees36.grl'
+name = 'colorref_smallexample_4_7.grl'
 autos = True
 RunIsomophismProgram(name,autos)
