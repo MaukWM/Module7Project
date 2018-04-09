@@ -307,6 +307,6 @@ def findAutoMorphism(Graph1, n):
     print("Graph " + str(n) + " has " + str(CountIsomorphism(dict1, dict2, True)) + " automorphisms")
 
 
-name = 'colorref_smallexample_4_7.grl'
+name = 'trees36.grl'
 autos = True
 RunIsomophismProgram(name,autos)
