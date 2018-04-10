@@ -190,14 +190,16 @@ def findStableColouring(dict1, dict2):
             a = False
             b = False
 
-            for vertex in vertices1:
-                if Neighbourhood(vertex) != neighbourhood1:
-                    changing1sub.append(vertex)
-                    a = True
-            for vertex in vertices2:
-                if Neighbourhood(vertex) != neighbourhood1:
-                    changing2sub.append(vertex)
-                    b = True
+            if vertices1 is not None:
+                for vertex in vertices1:
+                    if Neighbourhood(vertex) != neighbourhood1:
+                        changing1sub.append(vertex)
+                        a = True
+            if vertices2 is not None:
+                for vertex in vertices2:
+                    if Neighbourhood(vertex) != neighbourhood1:
+                        changing2sub.append(vertex)
+                        b = True
             if a:
                 changing1.append(changing1sub)
                 changed = True
@@ -305,7 +307,7 @@ def findAutoMorphism(Graph1, n):
     print("Graph " + str(n) + " has " + str(CountIsomorphism(dict1, dict2, True, False)) + " automorphisms")
 
 
-name = 'colorref_largeexample_6_960.grl'
+name = 'basicGI2.grl'
 autos = False
 decision = True
 RunIsomophismProgram(name,autos,decision)
