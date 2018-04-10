@@ -4,7 +4,7 @@ import collections
 
 # Central program
 
-def RunIsomophismProgram(name,autos):
+def RunIsomophismProgram(name,autos,decision):
     with open(name) as f:
         L = load_graph(f, read_list=True)
 
@@ -38,7 +38,7 @@ def RunIsomophismProgram(name,autos):
     for x in range(0,a):
         for y in range(x + 1,a):
             something = [dicts[x],dicts[y]]
-            print("graph " + str(x) + " graph " + str(y) + " have " + str(CountIsomorphism(dicts[x],dicts[y],True)) + " isomorphism(s)")
+            print("graph " + str(x) + " graph " + str(y) + " have " + str(CountIsomorphism(dicts[x],dicts[y],True,decision)) + " isomorphism(s)")
 
 
 
@@ -212,7 +212,7 @@ def findStableColouring(dict1, dict2):
 
                 listFromDict1 = dict1.get(key)
 
-                max1 = len(dict1)
+                max1 = max(dict1.keys())+1
                 dict1[max1] = []
                 for vertex in list1sub:
                     listFromDict1.remove(vertex)
@@ -221,13 +221,13 @@ def findStableColouring(dict1, dict2):
                 key = list2sub[0]
                 list2sub.remove(key)
 
-                max2 = len(dict2)
+                max2 = max(dict2.keys())+1
                 dict2[max2] = []
                 for vertex in list2sub:
                     dict2[max2].append(vertex)
                     dict2.get(key).remove(vertex)
 
-def CountIsomorphism(dict1, dict2, first):
+def CountIsomorphism(dict1, dict2, first, decicion):
     if not first:
         findStableColouring(dict1, dict2)
     if BasicChecks(dict1, dict2):
@@ -251,17 +251,15 @@ def CountIsomorphism(dict1, dict2, first):
         dict1 = DeepcopyDict(dict1Old)
         dict2 = DeepcopyDict(dict2Old)
 
-        max = len(dict1)
+        newkey = max(dict1Old.keys())
 
         dict1.get(key).remove(vertex1)
         dict2.get(key).remove(vertex2)
-        dict1[max + 1] = [vertex1]
-        dict2[max + 1] = [vertex2]
-        num = num + CountIsomorphism(dict1, dict2, False)
+        dict1[newkey + 1] = [vertex1]
+        dict2[newkey + 1] = [vertex2]
+        num = num + CountIsomorphism(dict1, dict2, False,decision)
 
-        DecisionProblem = False
-
-        if DecisionProblem:
+        if decision:
             if num > 0:
                 break
     return num
@@ -304,9 +302,10 @@ def findAutoMorphism(Graph1, n):
     dict1 = BuildDict(Graph1.vertices)[0]
     dict2 = BuildDict(Graph2.vertices)[0]
 
-    print("Graph " + str(n) + " has " + str(CountIsomorphism(dict1, dict2, True)) + " automorphisms")
+    print("Graph " + str(n) + " has " + str(CountIsomorphism(dict1, dict2, True, False)) + " automorphisms")
 
 
-name = 'trees36.grl'
-autos = True
-RunIsomophismProgram(name,autos)
+name = 'colorref_largeexample_6_960.grl'
+autos = False
+decision = True
+RunIsomophismProgram(name,autos,decision)
