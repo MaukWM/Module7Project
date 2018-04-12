@@ -35,44 +35,11 @@ def RunIsomophismProgram(name,autos,decision):
             findAutoMorphism(graph,n)
             n = n + 1
 
-    PrintDing = []
-    listed = []
     for x in range(0,a):
-        printding = []
-        listed.append(0)
         for y in range(x + 1,a):
-            printding.append(x)
-            printding.append(y)
-            printding.append(CountIsomorphism(dicts[x],dicts[y],True,decision,autos))
-    PrintDing.append(printding)
+            something = [dicts[x],dicts[y]]
+            print("graph " + str(x) + " graph " + str(y) + " have " + str(CountIsomorphism(dicts[x],dicts[y],True,decision,autos)) + " isomorphism(s)")
 
-    k = []
-    k.append(PrintDing[0])
-    PrintDing.remove(PrintDing[0])
-
-    for x in PrintDing:
-        flag = True
-        for y in k:
-
-            if x[0] in y:
-                y.insert(len(y) - 1, x[1])
-                flag = False
-        if flag:
-            k.append(x)
-
-    print(k)
-    if autos:
-        print("Sets of isomorphic Graphs: Number of Automorphisms:")
-        for x in k:
-            amount = x[-1]
-            x.remove(amount)
-            print(str(x) + "            " + amount)
-    else:
-        print("Sets of isomorphic Graphs:")
-        for x in k:
-            amount = x[-1]
-            x.remove(amount)
-            print(x)
 
 
 # writing to dot file
@@ -271,6 +238,7 @@ def CountIsomorphism(dict1, dict2, first, decicion, autos):
             return 1
     else:
         return 0
+    print("branching")
     key = colourx[1]
 
     dict1Old = DeepcopyDict(dict1)
@@ -337,7 +305,7 @@ def findAutoMorphism(Graph1, n):
 
     print("Graph " + str(n) + " has " + str(CountIsomorphism(dict1, dict2, True, False, autos)) + " automorphisms")
 
-name = 'basicGI1.grl'
-autos = True
+name = 'colorref_smallexample_4_7.grl'
+autos = False
 decision = False
 RunIsomophismProgram(name,autos,decision)
